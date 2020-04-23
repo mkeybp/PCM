@@ -115,7 +115,7 @@ namespace PCM
 
             //}
 
-
+            // Show only if game is in transfer state
             if (gamestate == GameState.Transfer)
             {
 
