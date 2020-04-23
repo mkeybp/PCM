@@ -6,11 +6,16 @@ using System.Diagnostics;
 
 namespace PCM
 {
+    public enum GameState { StartScreen, Transfer, Racing }
+
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
     public class GameWorld : Game
     {
+
+        public GameState gamestate = new GameState();
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private SpriteFont text;
@@ -72,6 +77,14 @@ namespace PCM
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+
+            if (Keyboard.GetState().IsKeyDown(Keys.H))
+            {
+                gamestate = GameState.Transfer;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.G))
+                gamestate = GameState.Racing;
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -89,20 +102,112 @@ namespace PCM
             spriteBatch.Draw(background, new Vector2(0, 0), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
 
 
+            // Position skal ++ på y aksen
 
-            spriteBatch.DrawString(text, DatabaseConnection.Instance.name,
-                                        new Vector2(graphics.GraphicsDevice.Viewport.Width / 3, graphics.GraphicsDevice.Viewport.Height - 200),
-                                        Color.Red,
-                                       0,
-                                       Vector2.Zero,
-                                      1,
-                                        SpriteEffects.None,
-                                        1f);
+
+            //while (DatabaseConnection.Instance.result.Read())
+            //{
+            //    DatabaseConnection.Instance.id = DatabaseConnection.Instance.result.GetInt32(0);
+            //    DatabaseConnection.Instance.name = DatabaseConnection.Instance.result.GetString(1);
+
+            //    Debug.WriteLine($"Id: {DatabaseConnection.Instance.id} Name: {DatabaseConnection.Instance.name}");
+
+
+            //}
+
+
+            if (gamestate == GameState.Transfer)
+            {
+
+                // NAME
+                spriteBatch.DrawString(text, DatabaseConnection.Instance.name,
+                                                new Vector2(50, 50),
+                                                Color.Red,
+                                               0,
+                                               Vector2.Zero,
+                                              1,
+                                                SpriteEffects.None,
+                                                1f);
+                // STAMINA
+                spriteBatch.DrawString(text, DatabaseConnection.Instance.stamina.ToString(),
+                                              new Vector2(200, 50),
+                                              Color.Red,
+                                             0,
+                                             Vector2.Zero,
+                                            1,
+                                              SpriteEffects.None,
+                                              1f);
+
+                // SPEED
+                spriteBatch.DrawString(text, DatabaseConnection.Instance.speed.ToString(),
+                                          new Vector2(250, 50),
+                                              Color.Red,
+                                             0,
+                                             Vector2.Zero,
+                                            1,
+                                              SpriteEffects.None,
+                                              1f);
+
+                // STRENGHT
+                spriteBatch.DrawString(text, DatabaseConnection.Instance.strength.ToString(),
+                                               new Vector2(300, 50),
+                                              Color.Red,
+                                             0,
+                                             Vector2.Zero,
+                                            1,
+                                              SpriteEffects.None,
+                                              1f);
+
+                // WEIGHT
+                spriteBatch.DrawString(text, DatabaseConnection.Instance.weight.ToString(),
+                                              new Vector2(350, 50),
+                                             Color.Red,
+                                            0,
+                                            Vector2.Zero,
+                                           1,
+                                             SpriteEffects.None,
+                                             1f);
+
+                // AGE
+                spriteBatch.DrawString(text, DatabaseConnection.Instance.age.ToString(),
+                                              new Vector2(400, 50),
+                                             Color.Red,
+                                            0,
+                                            Vector2.Zero,
+                                           1,
+                                             SpriteEffects.None,
+                                             1f);
+
+
+                // EXPERINCE
+                spriteBatch.DrawString(text, DatabaseConnection.Instance.experince.ToString(),
+                                              new Vector2(450, 50),
+                                             Color.Red,
+                                            0,
+                                            Vector2.Zero,
+                                           1,
+                                             SpriteEffects.None,
+                                             1f);
+
+
+                // PRICE
+                spriteBatch.DrawString(text, DatabaseConnection.Instance.price.ToString(),
+                                              new Vector2(500, 50),
+                                             Color.Red,
+                                            0,
+                                            Vector2.Zero,
+                                           1,
+                                             SpriteEffects.None,
+                                             1f);
+
+            }
+
 
 
             // TODO: Add your drawing code here
 
             spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }

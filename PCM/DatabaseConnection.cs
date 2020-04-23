@@ -31,6 +31,14 @@ namespace PCM
         public SQLiteCommand command;
         public int id;
         public string name;
+        public float stamina;
+        public float speed;
+        public float strength;
+        public float weight;
+        public float age;
+        public float experince;
+        public float price;
+
 
         public void DatabaseConnect()
         {
@@ -60,7 +68,15 @@ namespace PCM
             {
                 id = result.GetInt32(0);
                 name = result.GetString(1);
-              
+                stamina = result.GetFloat(2);
+                speed = result.GetFloat(3);
+                strength = result.GetFloat(4);
+                weight = result.GetFloat(5);
+                age = result.GetInt32(6);
+                experince = result.GetFloat(7);
+                price = result.GetFloat(8);
+
+
                 Debug.WriteLine($"Id: {id} Name: {name}");
             }
 
