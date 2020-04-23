@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PCM
 {
-    public class DatabaseConnection
+    public class DatabaseConnection :GameObject
     {
         private static DatabaseConnection instance;
 
@@ -26,18 +26,21 @@ namespace PCM
             }
         }
 
-        public SQLiteDataReader result;
-        public SQLiteConnection connection;
-        public SQLiteCommand command;
-        public int id;
-        public string name;
-        public float stamina;
-        public float speed;
-        public float strength;
-        public float weight;
-        public float age;
-        public float experince;
-        public float price;
+
+        //public SQLiteDataReader result;
+        //public SQLiteConnection connection;
+        //public SQLiteCommand command;
+        //public int id;
+        //public string name;
+        //public float stamina;
+        //public float speed;
+        //public float strength;
+        //public float weight;
+        //public float age;
+        //public float experince;
+        //public float price;
+
+
 
 
         public void DatabaseConnect()
@@ -63,9 +66,12 @@ namespace PCM
 
             command = new SQLiteCommand("SELECT * FROM riders", connection);
             result = command.ExecuteReader();
-
+          
             while (result.Read())
             {
+
+                
+
                 id = result.GetInt32(0);
                 name = result.GetString(1);
                 stamina = result.GetFloat(2);
@@ -76,9 +82,13 @@ namespace PCM
                 experince = result.GetFloat(7);
                 price = result.GetFloat(8);
 
-
+                GameWorld.Instance.gameObjects.Add(new Rider());
                 Debug.WriteLine($"Id: {id} Name: {name}");
+
+
+                //Debug.WriteLine(GameWorld.Instance.gameObjects[1]);
             }
+            //Debug.WriteLine(GameWorld.Instance.gameObjects[35].strength);
 
             connection.Close();
 

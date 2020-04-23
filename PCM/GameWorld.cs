@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
 
@@ -13,8 +14,26 @@ namespace PCM
     /// </summary>
     public class GameWorld : Game
     {
+        private static GameWorld instance;
+
+        public static GameWorld Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new GameWorld();
+                }
+
+                return instance;
+
+            }
+        }
+
 
         public GameState gamestate = new GameState();
+
+        public List<GameObject> gameObjects = new List<GameObject>();
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -85,9 +104,14 @@ namespace PCM
             if (Keyboard.GetState().IsKeyDown(Keys.G))
                 gamestate = GameState.Racing;
 
-            // TODO: Add your update logic here
 
-            base.Update(gameTime);
+
+            if (Keyboard.GetState().IsKeyDown(Keys.M))
+
+
+                // TODO: Add your update logic here
+
+                base.Update(gameTime);
         }
 
         /// <summary>
@@ -100,27 +124,27 @@ namespace PCM
             spriteBatch.Begin();
 
             spriteBatch.Draw(background, new Vector2(0, 0), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
-
-
-            // Position skal ++ på y aksen
-
-
             //while (DatabaseConnection.Instance.result.Read())
             //{
             //    DatabaseConnection.Instance.id = DatabaseConnection.Instance.result.GetInt32(0);
             //    DatabaseConnection.Instance.name = DatabaseConnection.Instance.result.GetString(1);
 
             //    Debug.WriteLine($"Id: {DatabaseConnection.Instance.id} Name: {DatabaseConnection.Instance.name}");
-
-
             //}
 
+
+            // Position skal ++ på y aksen, for hver spiller der bliver loopet ud
+
+
             // Show only if game is in transfer state
-            if (gamestate == GameState.Transfer)
+            //if (gamestate == GameState.Transfer)
+            //{
+            for (int i = 0; i < Instance.gameObjects.Count; i++)
             {
+                GameObject yesy = Instance.gameObjects[i];
 
                 // NAME
-                spriteBatch.DrawString(text, DatabaseConnection.Instance.name,
+                spriteBatch.DrawString(text, Instance.gameObjects[i].name,
                                                 new Vector2(50, 50),
                                                 Color.Red,
                                                0,
@@ -129,7 +153,7 @@ namespace PCM
                                                 SpriteEffects.None,
                                                 1f);
                 // STAMINA
-                spriteBatch.DrawString(text, DatabaseConnection.Instance.stamina.ToString(),
+                spriteBatch.DrawString(text, Instance.gameObjects[i].stamina.ToString(),
                                               new Vector2(200, 50),
                                               Color.Red,
                                              0,
@@ -139,7 +163,7 @@ namespace PCM
                                               1f);
 
                 // SPEED
-                spriteBatch.DrawString(text, DatabaseConnection.Instance.speed.ToString(),
+                spriteBatch.DrawString(text, Instance.gameObjects[i].speed.ToString(),
                                           new Vector2(250, 50),
                                               Color.Red,
                                              0,
@@ -149,7 +173,7 @@ namespace PCM
                                               1f);
 
                 // STRENGHT
-                spriteBatch.DrawString(text, DatabaseConnection.Instance.strength.ToString(),
+                spriteBatch.DrawString(text, Instance.gameObjects[i].strength.ToString(),
                                                new Vector2(300, 50),
                                               Color.Red,
                                              0,
@@ -159,7 +183,7 @@ namespace PCM
                                               1f);
 
                 // WEIGHT
-                spriteBatch.DrawString(text, DatabaseConnection.Instance.weight.ToString(),
+                spriteBatch.DrawString(text, Instance.gameObjects[i].weight.ToString(),
                                               new Vector2(350, 50),
                                              Color.Red,
                                             0,
@@ -169,7 +193,7 @@ namespace PCM
                                              1f);
 
                 // AGE
-                spriteBatch.DrawString(text, DatabaseConnection.Instance.age.ToString(),
+                spriteBatch.DrawString(text, Instance.gameObjects[i].age.ToString(),
                                               new Vector2(400, 50),
                                              Color.Red,
                                             0,
@@ -180,7 +204,7 @@ namespace PCM
 
 
                 // EXPERINCE
-                spriteBatch.DrawString(text, DatabaseConnection.Instance.experince.ToString(),
+                spriteBatch.DrawString(text, Instance.gameObjects[i].experince.ToString(),
                                               new Vector2(450, 50),
                                              Color.Red,
                                             0,
@@ -191,7 +215,7 @@ namespace PCM
 
 
                 // PRICE
-                spriteBatch.DrawString(text, DatabaseConnection.Instance.price.ToString(),
+                spriteBatch.DrawString(text, Instance.gameObjects[i].price.ToString(),
                                               new Vector2(500, 50),
                                              Color.Red,
                                             0,
@@ -201,9 +225,6 @@ namespace PCM
                                              1f);
 
             }
-
-
-
             // TODO: Add your drawing code here
 
             spriteBatch.End();
@@ -212,3 +233,4 @@ namespace PCM
         }
     }
 }
+
