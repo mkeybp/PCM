@@ -13,43 +13,8 @@ namespace PCM
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
-        public void DatabaseConnection()
-        {
-            var connection = new SQLiteConnection("Data Source=PCM.db;Version=3;New=True");
-
-            connection.Open();
-
-            var command = new SQLiteCommand("DROP TABLE riders", connection);
-            command.ExecuteNonQuery();
-
-            command = new SQLiteCommand("CREATE TABLE IF NOT EXISTS riders (Id INTEGER PRIMARY KEY, Name VARCHAR(50));", connection);
-            command.ExecuteNonQuery();
-
-            command = new SQLiteCommand("INSERT INTO riders (Name) VALUES ('Daenerys Targaryen');", connection);
-            command.ExecuteNonQuery();
-
-            command = new SQLiteCommand("INSERT INTO riders (Name) VALUES ('Tyrion Lannister');", connection);
-            command.ExecuteNonQuery();
-
-            command = new SQLiteCommand("INSERT INTO riders (Name) VALUES ('Jon Snow');", connection);
-            command.ExecuteNonQuery();
-
-            command = new SQLiteCommand("SELECT * FROM riders", connection);
-            var result = command.ExecuteReader();
-
-            while (result.Read())
-            {
-                var id = result.GetInt32(0);
-                var name = result.GetString(1);
-
-                Debug.WriteLine($"Id: {id} Name: {name}");
-            }
-
-            connection.Close();
-
-        }
-
+        private SpriteFont text;
+        private Texture2D background;
 
         public GameWorld()
         {
@@ -68,7 +33,7 @@ namespace PCM
             // TODO: Add your initialization logic here
 
 
-            DatabaseConnection();
+            DatabaseConnection.Instance.DatabaseConnect();
 
             base.Initialize();
         }
@@ -81,6 +46,9 @@ namespace PCM
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            text = Content.Load<SpriteFont>("Text");
+            background = Content.Load<Texture2D>("Background");
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -116,9 +84,25 @@ namespace PCM
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+
+            spriteBatch.Draw(background, new Vector2(0, 0), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+
+
+
+            spriteBatch.DrawString(text, DatabaseConnection.Instance.name,
+                                        new Vector2(graphics.GraphicsDevice.Viewport.Width / 3, graphics.GraphicsDevice.Viewport.Height - 200),
+                                        Color.Red,
+                                       0,
+                                       Vector2.Zero,
+                                      1,
+                                        SpriteEffects.None,
+                                        1f);
+
 
             // TODO: Add your drawing code here
 
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
