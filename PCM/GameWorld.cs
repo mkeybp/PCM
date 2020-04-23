@@ -107,10 +107,10 @@ namespace PCM
             position.X = state.X;
             position.Y = state.Y;
 
-            Rectangle mouseRectangle = new Rectangle(state.X, state.Y, 100, 100); //4-int instance
+            Rectangle mouseRectangle = new Rectangle(state.X, state.Y, 100, 100); 
 
 
-            if (mouseRectangle.Intersects(rectangle)) //if rt intersects another
+            if (mouseRectangle.Intersects(rectangle)) 
             {
 
                 Debug.WriteLine("hit");
