@@ -57,7 +57,10 @@ namespace PCM
         {
             // TODO: Add your initialization logic here
 
-
+            position = new Vector2(graphics.GraphicsDevice.Viewport.
+                 Width / 2,
+                              graphics.GraphicsDevice.Viewport.
+                              Height / 2);
             DatabaseConnection.Instance.DatabaseConnect();
 
             base.Initialize();
@@ -101,9 +104,17 @@ namespace PCM
 
 
 
-
             position.X = state.X;
             position.Y = state.Y;
+
+            Rectangle mouseRectangle = new Rectangle(state.X, state.Y, 100, 100); //4-int instance
+
+
+            if (mouseRectangle.Intersects(rectangle)) //if rt intersects another
+            {
+
+                Debug.WriteLine("hit");
+            }
 
 
             Debug.WriteLine(position.X.ToString() +
@@ -126,6 +137,9 @@ namespace PCM
                 base.Update(gameTime);
         }
 
+        Rectangle rectangle;
+
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -137,6 +151,19 @@ namespace PCM
 
             spriteBatch.Draw(background, new Vector2(0, 0), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
 
+
+
+           
+
+
+            Texture2D rect = new Texture2D(graphics.GraphicsDevice, 50, 20);
+
+            Color[] data = new Color[50 * 20];
+            for (int i = 0; i < data.Length; ++i) data[i] = Color.Chocolate;
+            rect.SetData(data);
+
+            Vector2 coor = new Vector2(10, 20);
+       
 
             /// Make a rectangle that takes an Id from the table, which can be "Buy" or "Sell"
             /// and if the mouse's rectangle intersects with the Buy/sell AND mouse is clicked, then do something
@@ -152,13 +179,15 @@ namespace PCM
             {
                 GameObject riders = Instance.gameObjects[i];
 
-                // NAME
-                if (Instance.gameObjects[i].experince == 3)
-                {
-                    place += 50;
+                //if (Instance.gameObjects[i].experince == 3)
+                //{
+                    place += 30;
 
-                    // Position skal ++ på y aksen, for hver spiller der bliver loopet ud
-                    spriteBatch.DrawString(text, Instance.gameObjects[i].name
+                rectangle = new Rectangle(650, place, 50, 20);
+
+
+                // Position skal ++ på y aksen, for hver spiller der bliver loopet ud
+                spriteBatch.DrawString(text, Instance.gameObjects[i].name
                         + "         " +
                         Instance.gameObjects[i].stamina
                         + "         " +
@@ -173,7 +202,7 @@ namespace PCM
                         Instance.gameObjects[i].experince
                         + "         " +
                         Instance.gameObjects[i].price,
-                                                        new Vector2(100, place),
+                                                        new Vector2(75, place),
                                                         Color.Red,
                                                        0,
                                                        Vector2.Zero,
@@ -181,86 +210,86 @@ namespace PCM
                                                         SpriteEffects.None,
                                                         1f);
 
+                spriteBatch.Draw(rect, new Vector2(650,place), Color.White);
+
+
+
+                //// STAMINA
+                //spriteBatch.DrawString(text, Instance.gameObjects[i].stamina.ToString(),
+                //                              new Vector2(200, 50),
+                //                              Color.Red,
+                //                             0,
+                //                             Vector2.Zero,
+                //                            1,
+                //                              SpriteEffects.None,
+                //                              1f);
+
+                //// SPEED
+                //spriteBatch.DrawString(text, Instance.gameObjects[i].speed.ToString(),
+                //                          new Vector2(250, 50),
+                //                              Color.Red,
+                //                             0,
+                //                             Vector2.Zero,
+                //                            1,
+                //                              SpriteEffects.None,
+                //                              1f);
+
+                //// STRENGHT
+                //spriteBatch.DrawString(text, Instance.gameObjects[i].strength.ToString(),
+                //                               new Vector2(300, 50),
+                //                              Color.Red,
+                //                             0,
+                //                             Vector2.Zero,
+                //                            1,
+                //                              SpriteEffects.None,
+                //                              1f);
+
+                //// WEIGHT
+                //spriteBatch.DrawString(text, Instance.gameObjects[i].weight.ToString(),
+                //                              new Vector2(350, 50),
+                //                             Color.Red,
+                //                            0,
+                //                            Vector2.Zero,
+                //                           1,
+                //                             SpriteEffects.None,
+                //                             1f);
+
+                //// AGE
+                //spriteBatch.DrawString(text, Instance.gameObjects[i].age.ToString(),
+                //                              new Vector2(400, 50),
+                //                             Color.Red,
+                //                            0,
+                //                            Vector2.Zero,
+                //                           1,
+                //                             SpriteEffects.None,
+                //                             1f);
+
+
+                //// EXPERINCE
+                //spriteBatch.DrawString(text, Instance.gameObjects[i].experince.ToString(),
+                //                              new Vector2(450, 50),
+                //                             Color.Red,
+                //                            0,
+                //                            Vector2.Zero,
+                //                           1,
+                //                             SpriteEffects.None,
+                //                             1f);
+
+
+                //// PRICE
+                //spriteBatch.DrawString(text, Instance.gameObjects[i].price.ToString(),
+                //                              new Vector2(500, 50),
+                //                             Color.Red,
+                //                            0,
+                //                            Vector2.Zero,
+                //                           1,
+                //                             SpriteEffects.None,
+                //                             1f);
 
 
 
 
-                    //// STAMINA
-                    //spriteBatch.DrawString(text, Instance.gameObjects[i].stamina.ToString(),
-                    //                              new Vector2(200, 50),
-                    //                              Color.Red,
-                    //                             0,
-                    //                             Vector2.Zero,
-                    //                            1,
-                    //                              SpriteEffects.None,
-                    //                              1f);
-
-                    //// SPEED
-                    //spriteBatch.DrawString(text, Instance.gameObjects[i].speed.ToString(),
-                    //                          new Vector2(250, 50),
-                    //                              Color.Red,
-                    //                             0,
-                    //                             Vector2.Zero,
-                    //                            1,
-                    //                              SpriteEffects.None,
-                    //                              1f);
-
-                    //// STRENGHT
-                    //spriteBatch.DrawString(text, Instance.gameObjects[i].strength.ToString(),
-                    //                               new Vector2(300, 50),
-                    //                              Color.Red,
-                    //                             0,
-                    //                             Vector2.Zero,
-                    //                            1,
-                    //                              SpriteEffects.None,
-                    //                              1f);
-
-                    //// WEIGHT
-                    //spriteBatch.DrawString(text, Instance.gameObjects[i].weight.ToString(),
-                    //                              new Vector2(350, 50),
-                    //                             Color.Red,
-                    //                            0,
-                    //                            Vector2.Zero,
-                    //                           1,
-                    //                             SpriteEffects.None,
-                    //                             1f);
-
-                    //// AGE
-                    //spriteBatch.DrawString(text, Instance.gameObjects[i].age.ToString(),
-                    //                              new Vector2(400, 50),
-                    //                             Color.Red,
-                    //                            0,
-                    //                            Vector2.Zero,
-                    //                           1,
-                    //                             SpriteEffects.None,
-                    //                             1f);
-
-
-                    //// EXPERINCE
-                    //spriteBatch.DrawString(text, Instance.gameObjects[i].experince.ToString(),
-                    //                              new Vector2(450, 50),
-                    //                             Color.Red,
-                    //                            0,
-                    //                            Vector2.Zero,
-                    //                           1,
-                    //                             SpriteEffects.None,
-                    //                             1f);
-
-
-                    //// PRICE
-                    //spriteBatch.DrawString(text, Instance.gameObjects[i].price.ToString(),
-                    //                              new Vector2(500, 50),
-                    //                             Color.Red,
-                    //                            0,
-                    //                            Vector2.Zero,
-                    //                           1,
-                    //                             SpriteEffects.None,
-                    //                             1f);
-
-
-
-
-                }
+                //}
 
             }
             // TODO: Add your drawing code here
