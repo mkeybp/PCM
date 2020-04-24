@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.Linq;
 
 namespace PCM
 {
@@ -29,11 +30,14 @@ namespace PCM
 
             }
         }
-
-
+        Vector2 position;
+          KeyboardState previousKBState;
         public GameState gamestate = new GameState();
 
         public List<GameObject> gameObjects = new List<GameObject>();
+
+        public List<char> listOfCharsForTeamNaming = new List<char>();
+
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -89,7 +93,7 @@ namespace PCM
         {
             // TODO: Unload any non ContentManager content here
         }
-        Vector2 position;
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -102,23 +106,24 @@ namespace PCM
 
             MouseState state = Mouse.GetState();
 
+            KeyboardState kbState = Keyboard.GetState();
 
 
             position.X = state.X;
             position.Y = state.Y;
 
-            Rectangle mouseRectangle = new Rectangle(state.X, state.Y, 100, 100); 
+            Rectangle mouseRectangle = new Rectangle(state.X, state.Y, 100, 100);
 
 
-            if (mouseRectangle.Intersects(rectangle)) 
+            if (mouseRectangle.Intersects(rectangle))
             {
 
                 Debug.WriteLine("hit");
             }
 
 
-            Debug.WriteLine(position.X.ToString() +
-                                    "," + position.Y.ToString());
+            //Debug.WriteLine(position.X.ToString() +
+            //                        "," + position.Y.ToString());
 
             if (Keyboard.GetState().IsKeyDown(Keys.H))
             {
@@ -128,16 +133,58 @@ namespace PCM
                 gamestate = GameState.Racing;
 
 
+            /// Create a list of chars then add a char if current key is pressed
+            /// Then write them to the screen
+            /// if user presses "backspace" remove the last item on the list
 
-            if (Keyboard.GetState().IsKeyDown(Keys.M))
+            // input fields
+            if (kbState.IsKeyDown(Keys.M) && previousKBState.IsKeyUp(Keys.M))
+            {
+
+                Instance.listOfCharsForTeamNaming.Add('M');
+            }
+            if (kbState.IsKeyDown(Keys.A) && previousKBState.IsKeyUp(Keys.A))
+            {
+                Instance.listOfCharsForTeamNaming.Add('A');
+            }
 
 
-                // TODO: Add your update logic here
 
-                base.Update(gameTime);
+            if (kbState.IsKeyDown(Keys.Back) && previousKBState.IsKeyUp(Keys.Back))
+            {
+               
+                if (Instance.listOfCharsForTeamNaming.Any()) //prevent IndexOutOfRangeException for empty list
+                {
+                    Instance.listOfCharsForTeamNaming.RemoveAt(listOfCharsForTeamNaming.Count - 1);
+                }
+
+            }
+
+            previousKBState = kbState;
+            //foreach (char o in listOfCharsForTeamNaming)
+            //{
+            //    Debug.WriteLine(o);
+            //}
+
+
+            for (int i = 0; i < Instance.listOfCharsForTeamNaming.Count; i++)
+            {
+                //char test = Instance.listOfCharsForTeamNaming[i];
+
+                Debug.WriteLine(Instance.listOfCharsForTeamNaming[i]);
+            }
+
+
+
+
+
+            // TODO: Add your update logic here
+
+            base.Update(gameTime);
         }
 
         Rectangle rectangle;
+        private string teamNameChars;
 
 
         /// <summary>
@@ -153,7 +200,21 @@ namespace PCM
 
 
 
-           
+
+
+            //foreach (char c in listOfCharsForTeamNaming)
+            //{
+            //    spriteBatch.DrawString(text, Instance.listOfCharsForTeamNaming[c].ToString(),
+            //                                             new Vector2(75, 50),
+            //                                             Color.Red,
+            //                                            0,
+            //                                            Vector2.Zero,
+            //                                           1,
+            //                                             SpriteEffects.None,
+            //                                             1f);
+            //}
+
+
 
 
             Texture2D rect = new Texture2D(graphics.GraphicsDevice, 50, 20);
@@ -163,13 +224,40 @@ namespace PCM
             rect.SetData(data);
 
             Vector2 coor = new Vector2(10, 20);
-       
+
 
             /// Make a rectangle that takes an Id from the table, which can be "Buy" or "Sell"
             /// and if the mouse's rectangle intersects with the Buy/sell AND mouse is clicked, then do something
 
 
             int place = 50;
+            int teamNameCharPos = 100;
+
+
+            spriteBatch.DrawString(text, "Team name: ",
+                                             new Vector2(10, 50),
+                                             Color.Red,
+                                            0,
+                                            Vector2.Zero,
+                                           1,
+                                             SpriteEffects.None,
+                                             1f);
+
+            // Team name
+            for (int i = 0; i < Instance.listOfCharsForTeamNaming.Count; i++)
+            {
+                spriteBatch.DrawString(text,Instance.listOfCharsForTeamNaming[i].ToString(),
+                                                   new Vector2(teamNameCharPos += 15, 50),
+                                                   Color.Red,
+                                                  0,
+                                                  Vector2.Zero,
+                                                 1,
+                                                   SpriteEffects.None,
+                                                   1f);
+            }
+
+
+
 
             // Show only if game is in transfer state
             //if (gamestate == GameState.Transfer)
@@ -177,11 +265,10 @@ namespace PCM
 
             for (int i = 0; i < Instance.gameObjects.Count; i++)
             {
-                GameObject riders = Instance.gameObjects[i];
 
                 //if (Instance.gameObjects[i].experince == 3)
                 //{
-                    place += 30;
+                place += 30;
 
                 rectangle = new Rectangle(650, place, 50, 20);
 
@@ -210,7 +297,7 @@ namespace PCM
                                                         SpriteEffects.None,
                                                         1f);
 
-                spriteBatch.Draw(rect, new Vector2(650,place), Color.White);
+                spriteBatch.Draw(rect, new Vector2(650, place), Color.White);
 
 
 

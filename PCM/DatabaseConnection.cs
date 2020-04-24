@@ -83,7 +83,7 @@ namespace PCM
                 price = result.GetFloat(8);
 
                 GameWorld.Instance.gameObjects.Add(new Rider());
-                Debug.WriteLine($"Id: {id} Name: {name}");
+                //Debug.WriteLine($"Id: {id} Name: {name}");
 
 
                 //Debug.WriteLine(GameWorld.Instance.gameObjects[1]);
