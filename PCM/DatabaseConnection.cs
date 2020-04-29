@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PCM
 {
-    public class DatabaseConnection :GameObject
+    public class DatabaseConnection : GameObject
     {
         private static DatabaseConnection instance;
 
@@ -27,21 +28,6 @@ namespace PCM
         }
 
 
-        //public SQLiteDataReader result;
-        //public SQLiteConnection connection;
-        //public SQLiteCommand command;
-        //public int id;
-        //public string name;
-        //public float stamina;
-        //public float speed;
-        //public float strength;
-        //public float weight;
-        //public float age;
-        //public float experince;
-        //public float price;
-
-
-
 
         public void DatabaseConnect()
         {
@@ -49,28 +35,14 @@ namespace PCM
 
             connection.Open();
 
-            //command = new SQLiteCommand("DROP TABLE riders", connection);
-            //command.ExecuteNonQuery();
-
-            //command = new SQLiteCommand("CREATE TABLE IF NOT EXISTS riders (Id INTEGER PRIMARY KEY, Name VARCHAR(50));", connection);
-            //command.ExecuteNonQuery();
-
-            //command = new SQLiteCommand("INSERT INTO riders (Name) VALUES ('Daenerys Targaryen');", connection);
-            //command.ExecuteNonQuery();
-
-            //command = new SQLiteCommand("INSERT INTO riders (Name) VALUES ('Tyrion Lannister');", connection);
-            //command.ExecuteNonQuery();
-
-            //command = new SQLiteCommand("INSERT INTO riders (Name) VALUES ('Jon Snow');", connection);
-            //command.ExecuteNonQuery();
-
+    
             command = new SQLiteCommand("SELECT * FROM riders", connection);
             result = command.ExecuteReader();
-          
+
             while (result.Read())
             {
 
-                
+
 
                 id = result.GetInt32(0);
                 name = result.GetString(1);
@@ -82,13 +54,38 @@ namespace PCM
                 experince = result.GetFloat(7);
                 price = result.GetFloat(8);
 
+                // To add team name to DB try this:
+                //result.GetString(9) = GameWorld.Instance.listOfCharsForTeamNaming;
+
+
                 GameWorld.Instance.gameObjects.Add(new Rider());
-                //Debug.WriteLine($"Id: {id} Name: {name}");
 
+                // CREATE
+                if (GameWorld.Instance.crud == CRUD.Create)
+                {
+                    command = new SQLiteCommand("INSERT INTO riders (Name, Stamina, Speed, Strength, Weight, Age, Experience, Price)" +
+                        "Values ('HJEHEJE', 100, 100, 100, 100, 100, 100 ,1000000)", connection);
+                    //command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                }
 
-                //Debug.WriteLine(GameWorld.Instance.gameObjects[1]);
+                // UPDATE
+                if (GameWorld.Instance.crud == CRUD.Update)
+                {
+                    command = new SQLiteCommand("UPDATE riders SET Name = 'ljahwdjh' WHERE id = 3", connection);
+                    //command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                }
+
+                // DELETE 
+                if (GameWorld.Instance.crud == CRUD.Delete)
+                {
+                    command = new SQLiteCommand("DELETE FROM riders WHERE Name='HJEHEJE'", connection);
+                    //command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                }
+
             }
-            //Debug.WriteLine(GameWorld.Instance.gameObjects[35].strength);
 
             connection.Close();
 
