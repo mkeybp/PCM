@@ -7,34 +7,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PCM.State
+namespace PCM.States
 {
     public abstract class State
     {
         #region Fields
-        protected ContentManager stContent;
 
-        protected GameWorld stGameWorld;
+        protected ContentManager content;
 
-        protected GraphicsDevice stGraphics;
+        protected GraphicsDevice graphicsDevice;
+
+        protected GameWorld game;
 
         #endregion
-
         #region Methods
 
         public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
 
         public abstract void PostUpdate(GameTime gameTime);
 
-        public State(GameWorld gameWorld, GraphicsDevice graphicsDevice, ContentManager content)
+        public State(GameWorld stGame, GraphicsDevice stGraphicsDevice, ContentManager stContent)
         {
-            stGameWorld = gameWorld;
-            stGraphics = graphicsDevice;
-            stContent = content;
+            game = stGame;
+
+            graphicsDevice = stGraphicsDevice;
+
+            content = stContent;
         }
 
         public abstract void Update(GameTime gameTime);
 
         #endregion
+
     }
 }

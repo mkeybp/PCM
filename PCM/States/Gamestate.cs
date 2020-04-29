@@ -7,11 +7,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace PCM.State
+namespace PCM.States
 {
-    public class MainMenuState : State
+    class Gamestate : State
     {
-        public MainMenuState(GameWorld gameWorld, GraphicsDevice graphicsDevice, ContentManager content) : base(gameWorld, graphicsDevice, content)
+        public Gamestate(GameWorld stGame, GraphicsDevice stGraphicsDevice, ContentManager stContent) : base(stGame, stGraphicsDevice, stContent)
         {
 
         }

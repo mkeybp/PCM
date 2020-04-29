@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Linq;
+using PCM.States;
 
 namespace PCM
 {
@@ -18,6 +19,15 @@ namespace PCM
     /// </summary>
     public class GameWorld : Game
     {
+
+        private State nextState;
+        private State currentState;
+        public void ChangeState(State state)
+        {
+            nextState = state;
+        }
+
+
         private static GameWorld instance;
 
         public static GameWorld Instance
@@ -85,6 +95,14 @@ namespace PCM
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             text = Content.Load<SpriteFont>("Text");
+
+            currentState = new MainMenuState(this, graphics.GraphicsDevice, Content);
+
+
+            // If gamestate = transfer show office background
+
+
+            // If gamestate = racing show this background
             background = Content.Load<Texture2D>("Background");
 
 
@@ -110,22 +128,27 @@ namespace PCM
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            MouseState state = Mouse.GetState();
-
+            //MouseState mouseState = Mouse.GetState();
             KeyboardState kbState = Keyboard.GetState();
 
 
-            position.X = state.X;
-            position.Y = state.Y;
+            //int x = mouseState.X;
+            //int y = mouseState.Y;
 
-            Rectangle mouseRectangle = new Rectangle(state.X, state.Y, 100, 100);
+            //Debug.WriteLine(x.ToString());
+            //Debug.WriteLine(y.ToString());
 
 
-            if (mouseRectangle.Intersects(rectangle))
-            {
 
-                Debug.WriteLine("hit");
-            }
+            //Rectangle mouseRectangle = new Rectangle(mouseState.X, mouseState.Y, 100, 100);
+
+
+
+            //if (mouseRectangle.Intersects(rectangle))
+            //{
+
+            //    Debug.WriteLine("hit");
+            //}
 
 
             //Debug.WriteLine(position.X.ToString() +
@@ -142,6 +165,8 @@ namespace PCM
 
 
             // CRUD
+
+            // If button "Buy" is pressed then add rider to teams db
 
             if (kbState.IsKeyDown(Keys.C) && previousKBState.IsKeyUp(Keys.C))
             {
@@ -175,7 +200,6 @@ namespace PCM
             // input fields
             if (kbState.IsKeyDown(Keys.M) && previousKBState.IsKeyUp(Keys.M))
             {
-
                 Instance.listOfCharsForTeamNaming.Add('M');
             }
             if (kbState.IsKeyDown(Keys.A) && previousKBState.IsKeyUp(Keys.A))
@@ -184,19 +208,17 @@ namespace PCM
             }
 
 
-
+            // Delete last char from list of listOfCharsForTeamNaming
             if (kbState.IsKeyDown(Keys.Back) && previousKBState.IsKeyUp(Keys.Back))
             {
-
                 if (Instance.listOfCharsForTeamNaming.Any()) //prevent IndexOutOfRangeException for empty list
                 {
-                    Instance.listOfCharsForTeamNaming.RemoveAt(listOfCharsForTeamNaming.Count - 1);
+                    Instance.listOfCharsForTeamNaming.RemoveAt(Instance.listOfCharsForTeamNaming.Count - 1);
                 }
-
             }
+
+
             //bool isEmpty = !listOfCharsForTeamNaming.Any();
-
-
             if (Instance.listOfCharsForTeamNaming.Count == 0)
             {
                 gamestate = GameState.StartScreen;
@@ -211,19 +233,33 @@ namespace PCM
             previousKBState = kbState;
 
 
-            for (int i = 0; i < Instance.listOfCharsForTeamNaming.Count; i++)
-            {
-                //char test = Instance.listOfCharsForTeamNaming[i];
+            //for (int i = 0; i < Instance.listOfCharsForTeamNaming.Count; i++)
+            //{
+            //    //char test = Instance.listOfCharsForTeamNaming[i];
 
-                Debug.WriteLine(Instance.listOfCharsForTeamNaming[i]);
-            }
+            //    //Debug.WriteLine(Instance.listOfCharsForTeamNaming[i]);
+            //}
 
             // TODO: Add your update logic here
+
+
+            if (nextState != null)
+            {
+                currentState = nextState;
+
+                nextState = null;
+            }
+
+            currentState.Update(gameTime);
+
+            currentState.PostUpdate(gameTime);
+
+
 
             base.Update(gameTime);
         }
 
-        Rectangle rectangle;
+        //Rectangle rectangle;
         private string teamNameChars;
 
 
@@ -239,22 +275,7 @@ namespace PCM
             spriteBatch.Draw(background, new Vector2(0, 0), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
 
 
-
-
-
-            //foreach (char c in listOfCharsForTeamNaming)
-            //{
-            //    spriteBatch.DrawString(text, Instance.listOfCharsForTeamNaming[c].ToString(),
-            //                                             new Vector2(75, 50),
-            //                                             Color.Red,
-            //                                            0,
-            //                                            Vector2.Zero,
-            //                                           1,
-            //                                             SpriteEffects.None,
-            //                                             1f);
-            //}
-
-
+            currentState.Draw(gameTime, spriteBatch);
 
 
             Texture2D rect = new Texture2D(graphics.GraphicsDevice, 50, 20);
@@ -311,7 +332,7 @@ namespace PCM
                     //{
                     place += 30;
 
-                    rectangle = new Rectangle(650, place, 50, 20);
+                    //rectangle = new Rectangle(650, place, 50, 20);
 
 
                     // Position skal ++ på y aksen, for hver spiller der bliver loopet ud

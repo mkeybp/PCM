@@ -43,6 +43,8 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\Button.cs" />
+    <Compile Include="Components\Component.cs" />
     <Compile Include="DatabaseConnection.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameWorld.cs" />
@@ -50,8 +52,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rider.cs" />
-    <Compile Include="State\MainMenuState.cs" />
-    <Compile Include="State\State.cs" />
+    <Compile Include="States\Gamestate.cs" />
+    <Compile Include="States\MainMenuState.cs" />
+    <Compile Include="States\State.cs" />
+    <Compile Include="States\TeamCreationState.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

@@ -72,7 +72,7 @@ namespace PCM
                 // UPDATE
                 if (GameWorld.Instance.crud == CRUD.Update)
                 {
-                    command = new SQLiteCommand("UPDATE riders SET Name = 'ljahwdjh' WHERE id = 3", connection);
+                    command = new SQLiteCommand("UPDATE riders SET Name = 'ljahwdjh' WHERE Name = 'HJEHEJE'", connection);
                     //command.Parameters.AddWithValue("@id", id);
                     command.ExecuteNonQuery();
                 }
@@ -80,10 +80,15 @@ namespace PCM
                 // DELETE 
                 if (GameWorld.Instance.crud == CRUD.Delete)
                 {
+                    // Delete from team table by id, if button "Sell" is pressed 
                     command = new SQLiteCommand("DELETE FROM riders WHERE Name='HJEHEJE'", connection);
                     //command.Parameters.AddWithValue("@id", id);
                     command.ExecuteNonQuery();
                 }
+
+                // INSERT rider into players team db
+
+                //:.
 
             }
 
