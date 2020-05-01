@@ -9,16 +9,16 @@ using PCM.States;
 
 namespace PCM
 {
-    public enum GameState { StartScreen, Transfer, Racing }
 
 
-    public enum CRUD { Read, Create, Update, Delete }
 
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
     public class GameWorld : Game
     {
+        public GameState gamestate = new GameState();
+        public CRUD crud = new CRUD();
 
         private State nextState;
         private State currentState;
@@ -26,6 +26,7 @@ namespace PCM
         {
             nextState = state;
         }
+
 
 
         private static GameWorld instance;
@@ -44,16 +45,13 @@ namespace PCM
             }
         }
         Vector2 position;
-        KeyboardState previousKBState;
-        public GameState gamestate = new GameState();
-        public CRUD crud = new CRUD();
-
+        public KeyboardState previousKBState;
+      
 
         public bool isCreating;
         public List<GameObject> gameObjects = new List<GameObject>();
 
         public List<char> listOfCharsForTeamNaming = new List<char>();
-
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -96,14 +94,11 @@ namespace PCM
             spriteBatch = new SpriteBatch(GraphicsDevice);
             text = Content.Load<SpriteFont>("Text");
 
-            currentState = new MainMenuState(this, graphics.GraphicsDevice, Content);
-
-
             // If gamestate = transfer show office background
-
 
             // If gamestate = racing show this background
             background = Content.Load<Texture2D>("Background");
+            currentState = new MainMenuState(this, graphics.GraphicsDevice, Content);
 
 
             // TODO: use this.Content to load your game content here
@@ -128,65 +123,64 @@ namespace PCM
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            //MouseState mouseState = Mouse.GetState();
+
+            MouseState mouseState = Mouse.GetState();
             KeyboardState kbState = Keyboard.GetState();
 
-
-            //int x = mouseState.X;
-            //int y = mouseState.Y;
+            int x = mouseState.X;
+            int y = mouseState.Y;
 
             //Debug.WriteLine(x.ToString());
             //Debug.WriteLine(y.ToString());
 
 
 
-            //Rectangle mouseRectangle = new Rectangle(mouseState.X, mouseState.Y, 100, 100);
+            Rectangle mouseRectangle = new Rectangle(mouseState.X, mouseState.Y, 100, 100);
 
 
 
-            //if (mouseRectangle.Intersects(rectangle))
-            //{
+            if (mouseRectangle.Intersects(rectangle))
+            {
 
-            //    Debug.WriteLine("hit");
-            //}
+                Debug.WriteLine("hit");
+            }
 
 
             //Debug.WriteLine(position.X.ToString() +
             //                        "," + position.Y.ToString());
 
-            if (Keyboard.GetState().IsKeyDown(Keys.H))
-            {
-                gamestate = GameState.Transfer;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.G))
-                crud = CRUD.Delete;
+            //if (Keyboard.GetState().IsKeyDown(Keys.H))
+            //{
+            //    gameS = 2;
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.G))
+            //    gameS = 1;
 
 
 
+            
 
             // CRUD
 
             // If button "Buy" is pressed then add rider to teams db
 
-            if (kbState.IsKeyDown(Keys.C) && previousKBState.IsKeyUp(Keys.C))
-            {
+            //if (kbState.IsKeyDown(Keys.C) && previousKBState.IsKeyUp(Keys.C))
+            //{
 
-                crud = CRUD.Create;
+            //    crud = CRUD.Create;
+            //}
 
-                isCreating = true;
-            }
+            //if (kbState.IsKeyDown(Keys.U) && previousKBState.IsKeyUp(Keys.U))
+            //{
 
-            if (kbState.IsKeyDown(Keys.U) && previousKBState.IsKeyUp(Keys.U))
-            {
+            //    crud = CRUD.Update;
+            //}
 
-                crud = CRUD.Update;
-            }
+            //if (kbState.IsKeyDown(Keys.D) && previousKBState.IsKeyUp(Keys.D))
+            //{
 
-            if (kbState.IsKeyDown(Keys.D) && previousKBState.IsKeyUp(Keys.D))
-            {
-
-                crud = CRUD.Delete;
-            }
+            //    crud = CRUD.Delete;
+            //}
 
             Debug.WriteLine(crud);
 
@@ -197,37 +191,44 @@ namespace PCM
             /// Then write them to the screen
             /// if user presses "backspace" remove the last item on the list
 
-            // input fields
-            if (kbState.IsKeyDown(Keys.M) && previousKBState.IsKeyUp(Keys.M))
-            {
-                Instance.listOfCharsForTeamNaming.Add('M');
-            }
-            if (kbState.IsKeyDown(Keys.A) && previousKBState.IsKeyUp(Keys.A))
-            {
-                Instance.listOfCharsForTeamNaming.Add('A');
-            }
 
-
-            // Delete last char from list of listOfCharsForTeamNaming
-            if (kbState.IsKeyDown(Keys.Back) && previousKBState.IsKeyUp(Keys.Back))
+            // If gamestate == StartScreen && Enter is pressed make it a teamNameArray
+            if (gamestate == GameState.StartScreen)
             {
-                if (Instance.listOfCharsForTeamNaming.Any()) //prevent IndexOutOfRangeException for empty list
+                // input fields
+                if (kbState.IsKeyDown(Keys.M) && previousKBState.IsKeyUp(Keys.M))
                 {
-                    Instance.listOfCharsForTeamNaming.RemoveAt(Instance.listOfCharsForTeamNaming.Count - 1);
+                    Instance.listOfCharsForTeamNaming.Add('M');
+                }
+                if (kbState.IsKeyDown(Keys.A) && previousKBState.IsKeyUp(Keys.A))
+                {
+                    Instance.listOfCharsForTeamNaming.Add('A');
+                }
+
+                // Delete last char from list of listOfCharsForTeamNaming
+                if (kbState.IsKeyDown(Keys.Back) && previousKBState.IsKeyUp(Keys.Back))
+                {
+                    if (Instance.listOfCharsForTeamNaming.Any()) //prevent IndexOutOfRangeException for empty list
+                    {
+                        Instance.listOfCharsForTeamNaming.RemoveAt(Instance.listOfCharsForTeamNaming.Count - 1);
+                    }
+                }
+                if (Instance.listOfCharsForTeamNaming.Count > 0 && kbState.IsKeyDown(Keys.Enter) && previousKBState.IsKeyUp(Keys.Enter))
+                {
+                    gamestate = GameState.Transfer;
+
                 }
             }
 
 
-            //bool isEmpty = !listOfCharsForTeamNaming.Any();
+
+
+
+
+
             if (Instance.listOfCharsForTeamNaming.Count == 0)
             {
                 gamestate = GameState.StartScreen;
-            }
-
-            if (Instance.listOfCharsForTeamNaming.Count > 0 && kbState.IsKeyDown(Keys.Enter) && previousKBState.IsKeyUp(Keys.Enter))
-            {
-                gamestate = GameState.Transfer;
-
             }
 
             previousKBState = kbState;
@@ -255,12 +256,12 @@ namespace PCM
             currentState.PostUpdate(gameTime);
 
 
+            DatabaseConnection.Instance.CRUDDb();
 
             base.Update(gameTime);
         }
 
-        //Rectangle rectangle;
-        private string teamNameChars;
+        Rectangle rectangle;
 
 
         /// <summary>
@@ -275,9 +276,6 @@ namespace PCM
             spriteBatch.Draw(background, new Vector2(0, 0), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
 
 
-            currentState.Draw(gameTime, spriteBatch);
-
-
             Texture2D rect = new Texture2D(graphics.GraphicsDevice, 50, 20);
 
             Color[] data = new Color[50 * 20];
@@ -285,6 +283,9 @@ namespace PCM
             rect.SetData(data);
 
             Vector2 coor = new Vector2(10, 20);
+
+
+            currentState.Draw(gameTime, spriteBatch);
 
 
             /// Make a rectangle that takes an Id from the table, which can be "Buy" or "Sell"
@@ -327,16 +328,15 @@ namespace PCM
 
                 for (int i = 0; i < Instance.gameObjects.Count; i++)
                 {
+                    place += 25;
 
-                    //if (Instance.gameObjects[i].experince == 3)
-                    //{
-                    place += 30;
-
-                    //rectangle = new Rectangle(650, place, 50, 20);
+                    rectangle = new Rectangle(650, place, 50, 20);
 
 
                     // Position skal ++ på y aksen, for hver spiller der bliver loopet ud
-                    spriteBatch.DrawString(text, Instance.gameObjects[i].name
+                    spriteBatch.DrawString(text, Instance.gameObjects[i].id
+                            + "         " +
+                            Instance.gameObjects[i].name
                             + "         " +
                             Instance.gameObjects[i].stamina
                             + "         " +

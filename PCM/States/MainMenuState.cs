@@ -10,7 +10,7 @@ using PCM.Components;
 
 namespace PCM.States
 {
-   public class MainMenuState : State
+    public class MainMenuState : State
     {
         private List<Component> components;
 
@@ -47,6 +47,8 @@ namespace PCM.States
         {
             //spriteBatch.Begin();
 
+
+         
             foreach (var component in components)
                 component.Draw(gameTime, spriteBatch);
 
@@ -69,6 +71,7 @@ namespace PCM.States
         {
             foreach (var component in components)
                 component.Update(gameTime);
+
         }
 
         private void QuitGameButton_Click(object sender, EventArgs e)

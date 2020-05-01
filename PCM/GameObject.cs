@@ -7,8 +7,16 @@ using System.Threading.Tasks;
 
 namespace PCM
 {
-    public class GameObject
+    public enum GameState { StartScreen, Transfer, Racing }
+
+    public enum CRUD { Read, Create, Update, Delete }
+    public abstract class GameObject
     {
+        //public GameState gamestate = new GameState();
+        //public CRUD crud = new CRUD();
+
+        public static int gameS;
+
         public SQLiteDataReader result;
         public SQLiteConnection connection;
         public SQLiteCommand command;
